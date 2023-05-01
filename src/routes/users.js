@@ -7,9 +7,7 @@ const Product=require('../models/products')
 const Restaurant=require('../models/restaurante')
 const{isAuthenticated}=require('../helpers/auth')
 
-//const rolescontroller = require('./roles')
-//el metodo router me permite crear un objeto que me puede facilitar la creacion de rutas
-//ahora crearemos rutas del servidor
+
 
 router.delete('/users/eliminar/:id', isAuthenticated, async (req, res) => {
   try {
@@ -61,13 +59,13 @@ router.get('/users/info/:id',isAuthenticated,async (req,res)=>{
 })
 router.get("/users/pedidos",isAuthenticated,async (req,res)=>{
   const orders = await Order.find({ user: req.user.id });
-  console.log("asd: ", orders)
+  
   res.render("users/pedidos",{orders})
 })
 
 router.post("/users/pedidos/:id",isAuthenticated,async (req,res)=>{
   const orders = await Order.findOne({ _id: req.params.id });
-  console.log("asd: ", orders)
+ 
   orders.status="Realizado"
   await orders.save()
   res.redirect("/about")
@@ -87,7 +85,7 @@ router.get("/users/signup", (req, res) => {
 });
 
 router.post("/users/signup", async (req, res) => {
-//  console.log(req.body);
+
 
   const { email, nombre, contra, numCelular, direccion, roles } = req.body;
 
@@ -99,27 +97,13 @@ router.post("/users/signup", async (req, res) => {
     direccion,
     roles,
   });
-//  console.log("los roles son:",roles)
-  // if (!roles) {
-  //   const role = await Role.find({ name: "user" });
 
-  //   const roleId = role.length > 0 ? role[0]._id.toString() : null;
-  //   console.log(roleId);
-  //   newUser.roles = roleId;
-  //   console.log("Roleid es este:", role[0]._id.toString());
-    
-  // } else {
-  //   const foundRoles = await Role.find({ name: { $in: roles } });
-  //   console.log("Roles encontrados:", foundRoles);
-
-  //   newUser.roles = foundRoles.map((role) => role.name);
-  // }
  
 
   let errors = [];
 
   if (nombre.length <= 0) {
-   // console.log("paso por aqui");
+   
     errors.push({ text: "Por favor ingrese su nombre" });
   }
  
@@ -145,7 +129,7 @@ router.post("/users/signup", async (req, res) => {
   else {
    
    const emailUser= await User.findOne({email:email});
-  //console.log("emailuser",email)
+  
    if(emailUser){
     
    req.flash('error_msg','El correo ya existe');
@@ -157,7 +141,7 @@ router.post("/users/signup", async (req, res) => {
 
    
    newUser.contra=await newUser.encryptPassword(contra)  
-   //console.log("Despues de encriptar:",newUser)
+   
    await newUser.save()
    req.flash('success_msg',"Registro exitoso")
    res.redirect('/users/signin')

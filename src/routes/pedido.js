@@ -26,7 +26,7 @@ router.get("/Pedido/estado", isAuthenticated, async (req, res) => {
   const orders = await Order.find({ restaurant: restaurant._id }).populate(
     "products"
   );
-  console.log("orderxd: ", orders);
+
   res.render("pedidos/pedidoRestaurante", { orders });
 });
 
@@ -39,7 +39,7 @@ router.get("/pedidos/domiciliario", isAuthenticated, async (req, res) => {
         { status: { $ne: "|Realizado|" } },
       ],
     });
-    console.log("Domiciliario: ", orders);
+
     res.render("pedidos/EntregaPedidos", { orders });
   } catch (error) {
     console.error(error);
@@ -52,14 +52,12 @@ router.get("/pedidos/disponiblesUR", isAuthenticated, async (req, res) => {
     $and: [{ status: "Enviado" }, { isActive: true }],
   });
 
-  // Asignar un número aleatorio a cada orden y ordenarlas
-  orders = orders.map(order => {
-    order = order.toObject(); // Convertir el documento Mongoose a un objeto JavaScript para poder agregar nuevas propiedades
+  orders = orders.map((order) => {
+    order = order.toObject();
     order.randomNumber = Math.floor(Math.random() * 91) + 10;
     return order;
   });
 
-  // Ordenar las órdenes por el número aleatorio
   orders.sort((a, b) => a.randomNumber - b.randomNumber);
 
   if (orders && orders.length > 0 && orders[0].Domiciliario === undefined) {
@@ -70,14 +68,11 @@ router.get("/pedidos/disponiblesUR", isAuthenticated, async (req, res) => {
   }
 });
 
-
 router.get("/pedido/disponibles", isAuthenticated, async (req, res) => {
-
   const order = await Order.find({
     $and: [{ status: "Enviado" }, { isActive: true }],
   }).sort({ date: -1 });
 
-  //console.log("encontre:", order);
   if (order && order.Domiciliario === undefined) {
     const products = order.products;
     res.render("pedidos/pedidos", { orders: order });
@@ -95,11 +90,10 @@ router.post("/pedido/tomar/:id", isAuthenticated, async (req, res) => {
     await order.save();
   }
 
-  //console.log("pedidoOrder: ",order)
   if (order.Domiciliario === undefined) {
     order.Domiciliario = req.user.id;
   }
-  //console.log("order status:", order.status)
+
   const cambio = getNextStatus(order.status);
   order.status = cambio;
   await order.save();
@@ -113,21 +107,11 @@ router.post("/pedido/tomar/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-// router.get('/pedidos/domiciliario',isAuthenticated,async (req,res)=>{
-
-//   const order = await Order.find({ Domiciliario: req.user.id });
-//   console.log("im still standing")
-//   console.log("EncontraPedidos:",order)
-//   res.render("pedidos/EntregaPedidos",{order})
-// })
-
 router.post("/pedido/actualizar", isAuthenticated, async (req, res) => {});
 
 router.get("/pedido/envio/:id", isAuthenticated, async (req, res) => {
   const order = await Order.findOne({ _id: req.params.id });
-  // console.log("ordersito: ", order.status);
 
-  console.log("entro");
   order.status = "Enviado";
   await order.save();
 
@@ -136,7 +120,7 @@ router.get("/pedido/envio/:id", isAuthenticated, async (req, res) => {
 
 router.get("/order/carrito", isAuthenticated, async (req, res) => {
   const order = await Order.findOne({ status: "Creado" });
-  // console.log("order:",order)
+
   if (order && order.status === "Creado") {
     const subtotals = order.products.map((item) => item.price * item.quantity);
     const totalPrice = subtotals.reduce((acc, subtotal) => acc + subtotal, 0);
@@ -148,23 +132,16 @@ router.get("/order/carrito", isAuthenticated, async (req, res) => {
   }
 });
 
-// router.post('/order',
-// async (req, res) => {
-//     const order = new Order(req.body);
-//     await order.save();
-//     res.json(order);
-//   });
 router.get("/order", isAuthenticated, async (req, res) => {
   const searchQuery = req.query.query;
-  // console.log("Search es este:",searchQuery)
+
   const regex = new RegExp(searchQuery, "i");
-  // console.log("aca",regex)
+
   try {
     const results = await Restaurant.find({
       $and: [{ name: regex }, { isActive: true }],
     }).sort({ domiciliosRealizados: -1 });
 
-    //  console.log(results)
     res.render("pedidos/Busqueda", { results });
   } catch (err) {
     res.status(500).send("Error en la búsqueda");
@@ -174,26 +151,20 @@ router.get("/order", isAuthenticated, async (req, res) => {
 });
 
 router.get("/order/:id", isAuthenticated, async (req, res) => {
-  //console.log("miralo",req.params.id)
   const productos = await Product.find({
     $and: [{ restaurant: req.params.id }, { isActive: true }],
   });
-  // console.log(productos)
+
   res.render("pedidos/restUserView", { productos });
 });
 
 router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
   const { quantity } = req.body;
   const productId = req.params.id;
-  //console.log("cantidad es: ",quantity)
+
   const userId = req.user.id;
 
   const productos = await Product.findById(productId);
-  const productName = productos.name;
-  const productPrice = productos.price;
-  //console.log("productos es: ",productos)
-  //console.log("nombre: ",productName)
-  //console.log("precio: ",productPrice)
 
   try {
     let cart = await Order.findOne({ status: "Creado" });
@@ -206,11 +177,7 @@ router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
       (p) => p.product.toString() === productId
     );
 
-    console.log("cart:", cart.status);
-
     if (productIndex >= 0) {
-      console.log("entro");
-
       cart.products[productIndex].quantity =
         Number(cart.products[productIndex].quantity) + Number(quantity);
     }
@@ -218,7 +185,7 @@ router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
     cart.restaurant = productos.restaurant;
 
     cart.products = cart.products.filter((product) => product.quantity > 0);
-    // console.log("antes de mandar: ",cart.products)
+
     await cart.save();
 
     req.flash("success_msg", "producto editado");
@@ -232,41 +199,28 @@ router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
 router.post("/order/add/:id", isAuthenticated, async (req, res) => {
   const { quantity } = req.body;
   const productId = req.params.id;
-  console.log("cantidad es: ", quantity);
+
   const userId = req.user.id;
 
   const productos = await Product.findById(productId);
   const productName = productos.name;
   const productPrice = productos.price;
-  //console.log("productos es: ",productos)
-  //console.log("nombre: ",productName)
-  //console.log("precio: ",productPrice)
 
   try {
-    // Encuentra el carrito del usuario
     let cart = await Order.findOne({ status: "Creado" });
-    // console.log("cart:",cart)
+
     if (!cart) {
-      // Si no existe un carrito, crea uno nuevo
       cart = new Order({ user: userId });
     }
-
-    // Busca si el producto ya está en el carrito
-    //const productIndex = cart.products.findIndex((p) => p.product.toString() === productId);
 
     const productIndex = cart.products.findIndex(
       (p) => p.product.toString() === productId
     );
-    //console.log("contador: ",productIndex)
-    console.log("cart:", cart.status);
-    //&& cart.status==="Pending"
-    if (productIndex >= 0) {
-      console.log("entro");
 
+    if (productIndex >= 0) {
       cart.products[productIndex].quantity =
         Number(cart.products[productIndex].quantity) + Number(quantity);
     } else {
-      console.log("else");
       const newProduct = {
         product: productId,
         quantity,
@@ -277,7 +231,7 @@ router.post("/order/add/:id", isAuthenticated, async (req, res) => {
     }
 
     cart.restaurant = productos.restaurant;
-    console.log("antes de mandar: ", cart.products);
+
     await cart.save();
 
     req.flash("success_msg", "Producto añadido al carrito");

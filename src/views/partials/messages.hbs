@@ -1,0 +1,24 @@
+{{#if success_msg}}
+
+<!--Si existe un error empieza a recorrer ese arreglo de errores y por cada recorrido me vas a 
+generar una plantilla de una alerta de bootstrap-->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{success_msg }}
+  
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+{{/if}}
+
+{{#if error_msg}}
+
+<!--Si existe un error empieza a recorrer ese arreglo de errores y por cada recorrido me vas a 
+generar una plantilla de una alerta de bootstrap-->
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{error_msg }}
+  
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+{{/if}}
+

@@ -1,0 +1,53 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid d-flex">
+
+    <form action="/pedido/disponibles" method="GET" class="col-auto">
+        <button class="btn btn-danger btn-block btn-sm" type="submit">Vejez</button>
+    </form>
+
+    <form action="/pedidos/disponiblesUR" method="GET" class="col-auto">
+        <button class="btn btn-danger btn-block btn-sm" type="submit">Distancia User-Res</button>
+    </form>
+
+    <form action="/pedidos/disponiblesUR" method="GET" class="col-auto">
+        <button class="btn btn-danger btn-block btn-sm" type="submit">Distancia Res-Cli</button>
+    </form>
+
+  </div>
+</nav>
+
+
+<div class="row">
+    {{#each orders }}
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title d-flex justify-content-between align-items-center">
+                    {{status}} 
+                </h4>
+                {{#if randomNumber}}
+                     <p class="mb-2">Distancia: {{randomNumber}} KM</p>
+                {{/if}}
+               
+                {{#each products}}
+                <div class="div">{{name}}x{{quantity}}</div>
+              
+                {{/each}}
+                
+                <form action="/pedido/tomar/{{_id}}" method="POST">
+                <button class="btn btn-danger btn-block btn-sm" type="submit">Tomar Pedido</button>
+                </form>
+                 
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="card mx-auto">
+        <div class="card-body">
+            
+            <p class="lead">No hay pedidos disponibles</p>
+        
+        </div>
+    </div>
+    {{/each}}
+</div>

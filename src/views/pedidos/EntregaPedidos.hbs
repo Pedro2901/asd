@@ -1,0 +1,75 @@
+<div class="row">
+    {{#each orders }}
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title d-flex justify-content-between align-items-center">
+                    
+                    estado :{{status}}
+                </h4>
+                 {{#each products}}
+                <div class="div">{{name}}</div>
+                {{/each}}
+
+                {{#if_equal @root.user.roles "domiciliario"}}
+                  {{#if_equal status "Aceptado"}}
+                  <div>
+                      <p class="fw-bold">cooking...</p>
+                  </div>
+              
+                 
+                   <form action="/pedido/estado/{{_id}}" method="POST">
+                   <button class="btn btn-danger btn-block btn-sm" type="submit"  disabled>Recoger    </button>
+                   </form>
+
+                   {{else}}
+                    {{#if_equal status "Recibido"}}
+                      <div>
+                        
+                      <p class="fw-bold"> {{status}}</p>
+                  </div>
+              
+                 
+                   <form action="/pedido/tomar/{{_id}}" method="POST">
+                   <button class="btn btn-danger btn-block btn-sm" type="submit"  >Recoger    </button>
+                   </form>
+                   {{else}}
+                   {{#if_equal status "En dirección"}}
+                     <div>
+                        
+                      <p class="fw-bold"> {{status}}</p>
+                  </div>
+              
+                 
+                   <form action="/pedido/tomar/{{_id}}" method="POST">
+                   <button class="btn btn-danger btn-block btn-sm" type="submit"  disabled>Recoger    </button>
+                   </form>
+                   {{else}}
+                   {{#if_equal status "Realizado"}}
+  <div>
+                        
+                      <p class="fw-bold"> {{status}}</p>
+                  </div>
+              
+                 
+                   <form action="/pedido/tomar/{{_id}}" method="POST">
+                   <button class="btn btn-danger btn-block btn-sm" type="submit"  >Terminar caso   </button>
+                   </form>
+                     {{/if_equal}}
+                   {{/if_equal}}
+                    {{/if_equal}}
+                   {{/if_equal}}
+                {{/if_equal}}
+
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="card mx-auto">
+        <div class="card-body">
+           
+            <p class="lead">Nada </p>
+          </div>
+    </div>
+    {{/each}}
+</div>

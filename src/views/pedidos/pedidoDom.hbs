@@ -1,0 +1,75 @@
+{{#if order}}
+ 
+
+ <h1>pedido {{user.nombre}}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>| Producto |</th>
+                <th>| Cantidad |</th>
+                <th>| precio/Unidad |</th>
+                <th>| precio |</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            {{#each order.products}}
+                <tr>
+                    <td>|{{ this.name}}|</td>
+                    <td>|{{ this.quantity}}|</td>
+                    <td>|{{ this.price}}|</td>
+                    <td> |{{ multiply price quantity}}|</td>
+                    <td>
+                        
+                         
+      <div class="row" style="max-width: 600px; margin: auto;">
+    <form action="/order/editarSR/{{this.product}}" method="POST" class="col-auto">
+    <input type="hidden" name="quantity" value="-1">
+    <button class="btn btn-danger btn-block btn-sm" type="submit">-1</button>
+</form>
+
+
+   <form action="/order/editarSR/{{this.product}}" method="POST" class="col-auto">
+    <input type="hidden" name="quantity" value="1">
+    <button class="btn btn-danger btn-block btn-sm" type="submit">+1</button>
+</form>
+</div>
+
+
+
+
+                    </td>
+              
+                </tr>
+
+            {{/each}}
+            <td>---------------------</td>
+             <td>------------------</td>
+              
+          <td>|Costo total: |</td>
+          <td>|{{totalPrice}}|</td>
+
+        </tbody>
+    </table>
+                                <form action="/pedido/envio/{{order._id}}" method="GET">
+          
+                <button class="btn btn-danger btn-block btn-sm" type="submit">Realizar envio </button>
+                        {{else  }}
+   <h1>pedido {{user.nombre}}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>| Producto |</th>
+                <th>| Cantidad |</th>
+                <th>| precio/Unidad |</th>
+                <th>| precio |</th>
+                <th>|Costo total:0|</th>
+            </tr>
+        </thead>
+        <tbody>
+      
+
+
+        </tbody>
+    </table>
+ {{/if}}

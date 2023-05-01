@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-md-4 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                 Datos de la cuenta
+            </div>
+             <div class="card-body">
+                <form action="/users/update/{{user._id}}?_method=PUT" method="post">
+                <input type="hidden"  name="_method" value="PUT">
+                    <div class="mb-3">
+                        <input type="email" class="form-control" name="email" placeholder="Email" value="{{user.email}}">
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="nombre" placeholder="Nombre" value="{{user.nombre}}">
+                    </div>
+                     
+                     <div class="mb-3">
+                        <input type="password" class="form-control" name="contra" placeholder="Password" value="" >
+                    </div>
+                       <div class="mb-3">
+                        <input type="number" class="form-control" name="numCelular" placeholder="numCelular" value="{{user.numCelular}}">
+                    </div>
+                       <div class="mb-3">
+                        <input type="text" class="form-control" name="direccion" placeholder="direccion" value="{{user.direccion}}">
+                    </div>
+                       
+                     <div class="form-group">
+  <label for="rol">Rol:</label>
+  <select class="form-control" id="roles" name="roles">
+    <option value="user">Usuario</option>
+    <option value="admin">Administrador</option>
+    <option value="domiciliario">Domiciliario</option>
+    <option value="restaurante">Restaurante</option>
+  </select>
+</div>
+
+
+
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary btn-block">
+                           Actualizar Datos
+                        </button>
+                    </div>
+                    
+
+                    
+                </form>
+                <form action="/users/eliminar/{{user._id}}?_method=DELETE" method="post">
+                <input type="hidden"  name="_method" value="DELETE">
+                  <div class="mb-3">
+                        <button type="submit" class="btn btn-primary btn-block">
+                           Eliminar cuenta
+                        </button>
+                    </div>
+               </form>
+                </div>
+        </div>
+    </div>
+</div>

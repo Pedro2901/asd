@@ -1,0 +1,41 @@
+<div class="row">
+    {{#each orders }}
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+              
+               
+                {{#if_equal status "Aceptado"  }}
+
+                   <h4 class="card-title d-flex justify-content-between align-items-center">
+                  Domiciliario en espera...
+                </h4>
+                 {{#each products}}
+                <div class="div">{{name}}</div>
+                {{/each}}
+                <form action="/pedido/tomar/{{_id}}" method="POST">
+                <button class="btn btn-danger btn-block btn-sm" type="submit">Pedido preparado</button>
+                </form>
+                 
+                {{else}}
+
+                  <h4 class="card-title d-flex justify-content-between align-items-center">
+                  {{status}}
+                </h4>
+                 {{#each products}}
+                <div class="div">{{name}}</div>
+                {{/each}}
+                 {{/if_equal}}
+                 
+            </div>
+        </div>
+    </div>
+    {{else}}
+    <div class="card mx-auto">
+        <div class="card-body">
+           
+            <p class="lead">No hay pedidos </p>
+          </div>
+    </div>
+    {{/each}}
+</div>

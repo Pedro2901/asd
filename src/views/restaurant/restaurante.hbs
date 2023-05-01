@@ -1,0 +1,31 @@
+
+{{#each restaurant}}
+<div class="card position-relative">
+    <div class="card-body">
+        <h1>{{name}}</h1>
+        <p>
+            La categoria del restaurante es la siguiente: {{category}}
+        </p>
+        <a href="/restaurant/actualizar" class="btn btn-success btn-block">Editar Restaurante</a>
+    </div>
+
+    <form action="/restaurant/eliminar/{{_id}}?_method=DELETE" method="POST" class="position-absolute top-0 end-0 m-2">
+        <input type="hidden" name="_method" value="DELETE">
+        <button class="btn btn-danger btn-sm" type="submit">Eliminar</button>
+    </form>
+</div>
+
+
+{{else  }}
+  
+  <div class="card mx-auto">
+        <div class="card-body">
+            <h1>Rol:{{user.roles}}</h1>
+            <p class="lead">No hay restaurante creado </p>
+            <a href="/restaurant/create" class="btn btn-success   btn-block ">Crealo!</a>
+        </div>
+    </div>
+
+
+{{/each}}
+

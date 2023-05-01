@@ -1,0 +1,19 @@
+{{#if error}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{error}}
+
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true"></span>
+  </button>
+</div>
+{{/if}}
+{{#each errors}}
+<!--Si existe un error empieza a recorrer ese arreglo de errores y por cada recorrido me vas a 
+generar una plantilla de una alerta de bootstrap-->
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  {{text}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true"></span>
+  </button>
+</div>
+{{/each}}

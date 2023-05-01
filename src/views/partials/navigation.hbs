@@ -1,0 +1,132 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Proyecto 1</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/about">About</a>
+        </li>
+     
+        
+         
+      </ul>
+    </div>
+
+     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+         {{#if_equal user.roles "user"}}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/order/carrito">carrito</a>
+        </li>
+         
+          <a class="nav-link active" aria-current="page" href="/users/pedidos">Pedidos</a>
+    
+
+          <div class="container">
+  
+    <form action="/order" method="GET">
+      <div class="input-group">
+        <input type="text" class="form-control" name="query" placeholder="Buscar...">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+      </div>
+    </form>
+  </div>
+           <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/logout">Logout</a>
+        </li>
+            <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/info/{{user._id}}">info</a>
+        </li>
+       
+        {{else}}
+        {{#if_equal user.roles "admin"}}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">admin</a>
+        </li>
+
+             <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/logout">Logout</a>
+        </li>
+            <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/info/{{user._id}}">info</a>
+        </li>
+
+         {{else}}
+ {{#if_equal user.roles "domiciliario"}}
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/pedido/disponibles">Pedidos Disponibles</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/pedidos/domiciliario">Pedidos en curso</a>
+        </li>
+
+
+             <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/logout">Logout</a>
+        </li>
+            <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/info/{{user._id}}">info</a>
+        </li>
+
+
+         {{else}}
+  {{#if_equal user.roles "restaurante"}}
+   <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/restaurant">Restaurante</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/restaurant/products">Productos Restaurante</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/products/create">Crear Productos</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/Pedido/estado">Pedidos en curso</a>
+        </li>
+
+             <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/logout">Logout</a>
+        </li>
+
+             <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/info/{{user._id}}">info</a>
+        </li>
+
+
+        {{else}}
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/signin">Signin</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/users/signup">signup</a>
+        </li>
+          {{/if_equal}}
+
+          {{/if_equal}}
+
+          {{/if_equal}}
+
+        {{/if_equal}}
+       
+        
+
+           
+       
+
+           
+      
+        
+         
+       </ul>
+    </div>
+  </div>
+</nav>

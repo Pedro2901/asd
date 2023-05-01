@@ -26,7 +26,7 @@ router.get("/Pedido/estado", isAuthenticated, async (req, res) => {
   const orders = await Order.find({ restaurant: restaurant._id }).populate(
     "products"
   );
-
+ 
   res.render("pedidos/pedidoRestaurante", { orders });
 });
 
@@ -39,7 +39,7 @@ router.get("/pedidos/domiciliario", isAuthenticated, async (req, res) => {
         { status: { $ne: "|Realizado|" } },
       ],
     });
-
+    
     res.render("pedidos/EntregaPedidos", { orders });
   } catch (error) {
     console.error(error);
@@ -52,11 +52,13 @@ router.get("/pedidos/disponiblesUR", isAuthenticated, async (req, res) => {
     $and: [{ status: "Enviado" }, { isActive: true }],
   });
 
-  orders = orders.map((order) => {
+
+  orders = orders.map(order => {
     order = order.toObject();
     order.randomNumber = Math.floor(Math.random() * 91) + 10;
     return order;
   });
+
 
   orders.sort((a, b) => a.randomNumber - b.randomNumber);
 
@@ -68,11 +70,14 @@ router.get("/pedidos/disponiblesUR", isAuthenticated, async (req, res) => {
   }
 });
 
+
 router.get("/pedido/disponibles", isAuthenticated, async (req, res) => {
+
   const order = await Order.find({
     $and: [{ status: "Enviado" }, { isActive: true }],
   }).sort({ date: -1 });
 
+  
   if (order && order.Domiciliario === undefined) {
     const products = order.products;
     res.render("pedidos/pedidos", { orders: order });
@@ -90,10 +95,11 @@ router.post("/pedido/tomar/:id", isAuthenticated, async (req, res) => {
     await order.save();
   }
 
+ 
   if (order.Domiciliario === undefined) {
     order.Domiciliario = req.user.id;
   }
-
+  
   const cambio = getNextStatus(order.status);
   order.status = cambio;
   await order.save();
@@ -107,11 +113,13 @@ router.post("/pedido/tomar/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-router.post("/pedido/actualizar", isAuthenticated, async (req, res) => {});
+
 
 router.get("/pedido/envio/:id", isAuthenticated, async (req, res) => {
   const order = await Order.findOne({ _id: req.params.id });
 
+
+  
   order.status = "Enviado";
   await order.save();
 
@@ -132,6 +140,7 @@ router.get("/order/carrito", isAuthenticated, async (req, res) => {
   }
 });
 
+
 router.get("/order", isAuthenticated, async (req, res) => {
   const searchQuery = req.query.query;
 
@@ -142,6 +151,7 @@ router.get("/order", isAuthenticated, async (req, res) => {
       $and: [{ name: regex }, { isActive: true }],
     }).sort({ domiciliosRealizados: -1 });
 
+    
     res.render("pedidos/Busqueda", { results });
   } catch (err) {
     res.status(500).send("Error en la búsqueda");
@@ -151,20 +161,24 @@ router.get("/order", isAuthenticated, async (req, res) => {
 });
 
 router.get("/order/:id", isAuthenticated, async (req, res) => {
+ 
   const productos = await Product.find({
     $and: [{ restaurant: req.params.id }, { isActive: true }],
   });
-
+ 
   res.render("pedidos/restUserView", { productos });
 });
 
 router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
   const { quantity } = req.body;
   const productId = req.params.id;
-
+ 
   const userId = req.user.id;
 
   const productos = await Product.findById(productId);
+  const productName = productos.name;
+  const productPrice = productos.price;
+
 
   try {
     let cart = await Order.findOne({ status: "Creado" });
@@ -177,7 +191,11 @@ router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
       (p) => p.product.toString() === productId
     );
 
+    
+
     if (productIndex >= 0) {
+      
+
       cart.products[productIndex].quantity =
         Number(cart.products[productIndex].quantity) + Number(quantity);
     }
@@ -185,7 +203,7 @@ router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
     cart.restaurant = productos.restaurant;
 
     cart.products = cart.products.filter((product) => product.quantity > 0);
-
+   
     await cart.save();
 
     req.flash("success_msg", "producto editado");
@@ -199,28 +217,38 @@ router.post("/order/editarSR/:id", isAuthenticated, async (req, res) => {
 router.post("/order/add/:id", isAuthenticated, async (req, res) => {
   const { quantity } = req.body;
   const productId = req.params.id;
-
+  
   const userId = req.user.id;
 
   const productos = await Product.findById(productId);
   const productName = productos.name;
   const productPrice = productos.price;
+  
 
   try {
+    
     let cart = await Order.findOne({ status: "Creado" });
-
+   
     if (!cart) {
+     
       cart = new Order({ user: userId });
     }
+
+    
 
     const productIndex = cart.products.findIndex(
       (p) => p.product.toString() === productId
     );
-
+    
+    
+    
     if (productIndex >= 0) {
+      
+
       cart.products[productIndex].quantity =
         Number(cart.products[productIndex].quantity) + Number(quantity);
     } else {
+      
       const newProduct = {
         product: productId,
         quantity,
@@ -231,7 +259,7 @@ router.post("/order/add/:id", isAuthenticated, async (req, res) => {
     }
 
     cart.restaurant = productos.restaurant;
-
+   
     await cart.save();
 
     req.flash("success_msg", "Producto añadido al carrito");

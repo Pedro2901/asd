@@ -59,13 +59,13 @@ router.get('/users/info/:id',isAuthenticated,async (req,res)=>{
 })
 router.get("/users/pedidos",isAuthenticated,async (req,res)=>{
   const orders = await Order.find({ user: req.user.id });
-  
+
   res.render("users/pedidos",{orders})
 })
 
 router.post("/users/pedidos/:id",isAuthenticated,async (req,res)=>{
   const orders = await Order.findOne({ _id: req.params.id });
- 
+
   orders.status="Realizado"
   await orders.save()
   res.redirect("/about")
@@ -103,7 +103,7 @@ router.post("/users/signup", async (req, res) => {
   let errors = [];
 
   if (nombre.length <= 0) {
-   
+  
     errors.push({ text: "Por favor ingrese su nombre" });
   }
  
@@ -129,7 +129,7 @@ router.post("/users/signup", async (req, res) => {
   else {
    
    const emailUser= await User.findOne({email:email});
-  
+ 
    if(emailUser){
     
    req.flash('error_msg','El correo ya existe');
@@ -141,7 +141,7 @@ router.post("/users/signup", async (req, res) => {
 
    
    newUser.contra=await newUser.encryptPassword(contra)  
-   
+ 
    await newUser.save()
    req.flash('success_msg',"Registro exitoso")
    res.redirect('/users/signin')

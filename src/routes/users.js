@@ -106,18 +106,28 @@ router.post("/users/signup", async (req, res) => {
   
     errors.push({ text: "Por favor ingrese su nombre" });
   }
+  if (email.length <= 0) {
+  
+    errors.push({ text: "Por favor ingrese email" });
+  }
+  if (contra.length <= 0) {
+  
+    errors.push({ text: "Por favor ingrese contraseña" });
+  }
+  if (numCelular.length <= 0) {
+  
+    errors.push({ text: "Por favor ingrese un numero de celular" });
+  }
  
 
-  if (nombre.length < 4) {
-    errors.push({ text: "El usuario debe tener minimo 4 caracteres" });
+  if (direccion.length < 0) {
+    errors.push({ text: "Por favor ingrese una dirección" });
   }
 
-  if (contra.length <= 3) {
-    errors.push({ text: "La contraseña debe ser minimo de 4 caracteres" });
-  }
- 
+  
   if (errors.length > 0) {
     res.render("users/Registrar", {
+      errors,
       email,
       nombre,
       contra,
@@ -125,6 +135,7 @@ router.post("/users/signup", async (req, res) => {
       direccion,
       roles,
     });
+    
   } 
   else {
    
